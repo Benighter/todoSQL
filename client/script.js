@@ -14,6 +14,10 @@ async function addTask() {
     alert("Please enter a task");
     return;
   }
+  if(description.length > 30){
+    alert("description can't be more than 30 characters")
+    return;
+  }
 
   const response = await fetch("http://localhost:5001/tasks", {
     method: "POST",
@@ -51,7 +55,9 @@ function renderTask(task) {
   li.appendChild(taskText);
 
   const deleteButton = document.createElement("button");
-  deleteButton.textContent = "x";
+  deleteButton.textContent = "🗑️";
+  deleteButton.style.fontSize = "1rem";
+  deleteButton.style.backgroundColor = "transparent";
   deleteButton.onclick = async () => {
     await fetch(`http://localhost:5001/tasks/${task.id}`, { method: "DELETE" });
     taskList.removeChild(li);
@@ -89,7 +95,12 @@ function renderTask(task) {
 saveUpdateBtn.onclick = async () => {
   const updatedDescription = updateInput.value.trim();
   if (updatedDescription === "") {
-    alert("Please enter a valid description");
+    alert("Description can't be empty");
+    return;
+  }
+
+  if(updatedDescription.length > 30){
+    alert("description can't be more than 30 characters")
     return;
   }
 

@@ -1,11 +1,15 @@
-const express = require("express");
-const { Pool } = require("pg");
-const cors = require("cors");
+import  express  from "express";
+import pkg from 'pg';
+const { Pool } = pkg;
+import  cors from "cors";
 const app = express();
 const port = 5001;
 
-app.use(express.json());
-app.use(cors());
+//load the static files
+import path  from 'path';
+import  {dirname} from 'path';
+import {fileURLToPath} from 'url';
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const pool = new Pool({
   user: "postgres",
@@ -13,6 +17,16 @@ const pool = new Pool({
   database: "newtodo",
   password: "",
   port: 5432,
+});
+
+
+
+app.use(express.json());
+app.use(cors());
+app.use(express.static(path.join(__dirname, '../client')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
 // Get all tasks
