@@ -1,6 +1,8 @@
 body {
-  background-color: rgb(170, 190, 190);
   text-align: center;
+  background: url(/images/Todo-image.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 h1 {
@@ -10,7 +12,8 @@ h1 {
 
 .todo {
   text-align: center;
-  background-color: rgb(25, 92, 114);
+  background-color:#99d1ff;
+  opacity: .8;
   height: 200px;
   position: relative;
   width: 450px;
@@ -33,7 +36,6 @@ h1 {
 
 .input-container {
   display: flex;
-  /* background-color: aqua; */
   gap: 0px;
 }
 

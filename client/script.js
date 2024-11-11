@@ -5,7 +5,6 @@ let updateModal = document.getElementById("updateModal");
 let updateInput = document.getElementById("updateInput");
 let saveUpdateBtn = document.getElementById("saveUpdateBtn");
 let cancelUpdateBtn = document.getElementById("cancelUpdateBtn");
-let editTask = false;
 let currentTask;
 
 async function addTask() {
@@ -14,8 +13,8 @@ async function addTask() {
     alert("Please enter a task");
     return;
   }
-  if(description.length > 30){
-    alert("description can't be more than 30 characters")
+  if (description.length > 30) {
+    alert("Description can't be more than 30 characters");
     return;
   }
 
@@ -37,6 +36,7 @@ async function addTask() {
 async function loadTasks() {
   const response = await fetch("http://localhost:5001/tasks");
   const tasks = await response.json();
+  taskList.innerHTML = ""; 
   tasks.forEach((task) => renderTask(task));
 }
 
@@ -45,9 +45,7 @@ function renderTask(task) {
   li.setAttribute("data-id", task.id);
 
   const taskText = document.createElement("span");
-  taskText.textContent = `${task.description} (Due: ${new Date(
-    task.date
-  ).toLocaleString()})`;
+  taskText.textContent = `${task.description} (Due: ${new Date(task.date).toLocaleString()})`;
   if (task.done) {
     taskText.style.textDecoration = "line-through";
     taskText.style.color = "grey";
@@ -59,17 +57,24 @@ function renderTask(task) {
   deleteButton.style.fontSize = "1rem";
   deleteButton.style.backgroundColor = "transparent";
   deleteButton.onclick = async () => {
-    await fetch(`http://localhost:5001/tasks/${task.id}`, { method: "DELETE" });
-    taskList.removeChild(li);
+    if (confirm("Are you sure you want to delete this task?")) {
+      await fetch(`http://localhost:5001/tasks/${task.id}`, { method: "DELETE" });
+      taskList.removeChild(li);
+    }
   };
 
   const updateButton = document.createElement("button");
   updateButton.textContent = "update";
-  updateButton.onclick = () => {
-    currentTask = task;
-    updateInput.value = task.description;
-    updateModal.style.display = "flex";
-  };
+  if (task.done) {
+    updateButton.disabled = true;
+    updateButton.hidden = true;
+  } else {
+    updateButton.onclick = () => {
+      currentTask = task;
+      updateInput.value = task.description;
+      updateModal.style.display = "flex";
+    };
+  }
 
   const doneButton = document.createElement("button");
   doneButton.textContent = "Done";
@@ -83,6 +88,9 @@ function renderTask(task) {
     taskText.style.color = "grey";
     doneButton.disabled = true;
     updateButton.disabled = true;
+    updateButton.hidden = true;
+
+    await loadTasks();
   };
 
   li.appendChild(deleteButton);
@@ -98,9 +106,8 @@ saveUpdateBtn.onclick = async () => {
     alert("Description can't be empty");
     return;
   }
-
-  if(updatedDescription.length > 30){
-    alert("description can't be more than 30 characters")
+  if (updatedDescription.length > 30) {
+    alert("Description can't be more than 30 characters");
     return;
   }
 
@@ -111,24 +118,14 @@ saveUpdateBtn.onclick = async () => {
     body: JSON.stringify(updatedTask),
   });
 
-  // Update the task in the list
-  const taskItem = document.querySelector(`li[data-id="${currentTask.id}"]`);
-  taskItem.querySelector("span").textContent = `${
-    updatedTask.description
-  } (Due: ${new Date(updatedTask.date).toLocaleString()})`;
-
   updateModal.style.display = "none";
+  await loadTasks();
 };
 
 cancelUpdateBtn.onclick = () => {
   updateModal.style.display = "none";
 };
 
-window.onclick = (event) => {
-  if (event.target === updateModal) {
-    updateModal.style.display = "none";
-  }
-};
-
+// Event listeners
 addTaskBtn.addEventListener("click", addTask);
-loadTasks();
+window.addEventListener("load", loadTasks); // Load tasks on page load
