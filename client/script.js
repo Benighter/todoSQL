@@ -1,11 +1,15 @@
-let taskInput = document.getElementById("taskInput");
-let taskList = document.getElementById("taskList");
-let addTaskBtn = document.getElementById("addTaskBtn");
-let updateModal = document.getElementById("updateModal");
-let updateInput = document.getElementById("updateInput");
-let saveUpdateBtn = document.getElementById("saveUpdateBtn");
-let cancelUpdateBtn = document.getElementById("cancelUpdateBtn");
-let currentTask;
+import { 
+  taskInput, 
+  taskList, 
+  addTaskBtn, 
+  updateModal, 
+  updateInput, 
+  saveUpdateBtn, 
+  cancelUpdateBtn,
+  renderTask 
+} from './dom.js';
+
+let currentTask = null;
 
 async function addTask() {
   const description = taskInput.value.trim();
@@ -29,78 +33,40 @@ async function addTask() {
   });
 
   const newTask = await response.json();
-  renderTask(newTask);
+  renderTask(newTask, handleUpdate, handleDelete, handleDone);
   taskInput.value = "";
 }
 
 async function loadTasks() {
   const response = await fetch("http://localhost:5001/tasks");
   const tasks = await response.json();
-  taskList.innerHTML = ""; 
-  tasks.forEach((task) => renderTask(task));
+  taskList.innerHTML = "";
+  tasks.forEach((task) => renderTask(task, handleUpdate, handleDelete, handleDone));
 }
 
-function renderTask(task) {
-  const li = document.createElement("li");
-  li.setAttribute("data-id", task.id);
-
-  const taskText = document.createElement("span");
-  taskText.textContent = `${task.description} (Due: ${new Date(task.date).toLocaleString()})`;
-  if (task.done) {
-    taskText.style.textDecoration = "line-through";
-    taskText.style.color = "grey";
-  }
-  li.appendChild(taskText);
-
-  const deleteButton = document.createElement("button");
-  deleteButton.textContent = "🗑️";
-  deleteButton.style.fontSize = "1rem";
-  deleteButton.style.backgroundColor = "transparent";
-  deleteButton.onclick = async () => {
-    if (confirm("Are you sure you want to delete this task?")) {
-      await fetch(`http://localhost:5001/tasks/${task.id}`, { method: "DELETE" });
-      taskList.removeChild(li);
-    }
-  };
-
-  const updateButton = document.createElement("button");
-  updateButton.textContent = "update";
-  if (task.done) {
-    updateButton.disabled = true;
-    updateButton.hidden = true;
-  } else {
-    updateButton.onclick = () => {
-      currentTask = task;
-      updateInput.value = task.description;
-      updateModal.style.display = "flex";
-    };
-  }
-
-  const doneButton = document.createElement("button");
-  doneButton.textContent = "Done";
-  doneButton.onclick = async () => {
-    await fetch(`http://localhost:5001/tasks/${task.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...task, done: true }),
-    });
-    taskText.style.textDecoration = "line-through";
-    taskText.style.color = "grey";
-    doneButton.disabled = true;
-    updateButton.disabled = true;
-    updateButton.hidden = true;
-
-    await loadTasks();
-  };
-
-  li.appendChild(deleteButton);
-  li.appendChild(updateButton);
-  li.appendChild(doneButton);
-  taskList.appendChild(li);
+// Task handlers
+function handleUpdate(task) {
+  currentTask = task;
+  updateInput.value = task.description;
+  updateModal.style.display = "flex";
 }
 
-// Save updated task when 'Save' is clicked
-saveUpdateBtn.onclick = async () => {
+async function handleDelete(taskId, liElement) {
+  await fetch(`http://localhost:5001/tasks/${taskId}`, { method: "DELETE" });
+  taskList.removeChild(liElement);
+}
+
+async function handleDone(task, updateUI) {
+  await fetch(`http://localhost:5001/tasks/${task.id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...task, done: true }),
+  });
+  updateUI();
+}
+
+
+async function saveUpdate() {
   const updatedDescription = updateInput.value.trim();
   if (updatedDescription === "") {
     alert("Description can't be empty");
@@ -108,6 +74,11 @@ saveUpdateBtn.onclick = async () => {
   }
   if (updatedDescription.length > 30) {
     alert("Description can't be more than 30 characters");
+    return;
+  }
+
+  if (!currentTask) {
+    alert("No task selected for update");
     return;
   }
 
@@ -119,13 +90,25 @@ saveUpdateBtn.onclick = async () => {
   });
 
   updateModal.style.display = "none";
+  currentTask = null;
   await loadTasks();
-};
+}
 
-cancelUpdateBtn.onclick = () => {
-  updateModal.style.display = "none";
-};
-
-// Event listeners
+// Event Listeners
 addTaskBtn.addEventListener("click", addTask);
-window.addEventListener("load", loadTasks); // Load tasks on page load
+window.addEventListener("load", loadTasks);
+
+
+saveUpdateBtn.addEventListener("click", saveUpdate);
+cancelUpdateBtn.addEventListener("click", () => {
+  updateModal.style.display = "none";
+  currentTask = null;
+});
+
+window.onclick = (event) => {
+  if (event.target === updateModal) {
+    updateModal.style.display = "none";
+    currentTask = null;
+  }
+};
+ 
