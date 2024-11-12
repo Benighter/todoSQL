@@ -5,7 +5,7 @@ import {
   updateModal, 
   updateInput, 
   saveUpdateBtn, 
-  cancelUpdateBtn,
+  cancelUpdateBtn, 
   renderTask 
 } from './dom.js';
 
@@ -22,29 +22,56 @@ async function addTask() {
     return;
   }
 
-  const response = await fetch("http://localhost:5001/tasks", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      description,
-      date: new Date().toISOString(),
-      done: false,
-    }),
-  });
+  try {
+    console.log('Sending task to server...'); 
 
-  const newTask = await response.json();
-  renderTask(newTask, handleUpdate, handleDelete, handleDone);
-  taskInput.value = "";
+    const response = await fetch("http://localhost:5001/api/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        description,
+        date: new Date().toISOString(),
+        done: false,
+      }),
+    });
+
+    console.log("Response status:", response.status); 
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error response data:", errorData); 
+      throw new Error(`Failed to add task: ${errorData.message || response.statusText}`);
+    }
+
+    const responseData = await response.json();
+    //testing
+    console.log("Response data:", responseData); 
+
+    const newTask = responseData;
+    renderTask(newTask, handleUpdate, handleDelete, handleDone); 
+    taskInput.value = ""; 
+
+  } catch (error) {
+    console.error("Error adding task:", error); 
+    alert("Error adding task: " + error.message); 
+  }
 }
 
 async function loadTasks() {
-  const response = await fetch("http://localhost:5001/tasks");
-  const tasks = await response.json();
-  taskList.innerHTML = "";
-  tasks.forEach((task) => renderTask(task, handleUpdate, handleDelete, handleDone));
+  try {
+    const response = await fetch("http://localhost:5001/api/tasks");
+    if (!response.ok) {
+      throw new Error("Failed to load tasks");
+    }
+    const tasks = await response.json();
+    taskList.innerHTML = ""; 
+    tasks.forEach((task) => renderTask(task, handleUpdate, handleDelete, handleDone));
+  } catch (error) {
+    console.error(error);
+    alert("Error loading tasks");
+  }
 }
 
-// Task handlers
 function handleUpdate(task) {
   currentTask = task;
   updateInput.value = task.description;
@@ -52,19 +79,42 @@ function handleUpdate(task) {
 }
 
 async function handleDelete(taskId, liElement) {
-  await fetch(`http://localhost:5001/tasks/${taskId}`, { method: "DELETE" });
-  taskList.removeChild(liElement);
+  try {
+    const response = await fetch(`http://localhost:5001/api/tasks/${taskId}`, { method: "DELETE" });
+    if (response.ok) {
+      taskList.removeChild(liElement); 
+    } else {
+      const errorData = await response.json();
+      console.error("Error response data:", errorData);
+      throw new Error('Failed to delete task');
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error deleting task: " + error.message);
+  
+  }
 }
 
 async function handleDone(task, updateUI) {
-  await fetch(`http://localhost:5001/tasks/${task.id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ...task, done: true }),
-  });
-  updateUI();
-}
+  try {
+    const response = await fetch(`http://localhost:5001/api/tasks/${task.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...task, done: true }),
+    });
 
+    if (response.ok) {
+      updateUI(); 
+    } else {
+      const errorData = await response.json();
+      console.error("Error response data:", errorData);
+      throw new Error('Failed to mark task as done');
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error marking task as done: " + error.message);
+  }
+}
 
 async function saveUpdate() {
   const updatedDescription = updateInput.value.trim();
@@ -83,21 +133,31 @@ async function saveUpdate() {
   }
 
   const updatedTask = { ...currentTask, description: updatedDescription };
-  await fetch(`http://localhost:5001/tasks/${currentTask.id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updatedTask),
-  });
 
-  updateModal.style.display = "none";
-  currentTask = null;
-  await loadTasks();
+  try {
+    const response = await fetch(`http://localhost:5001/api/tasks/${currentTask.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedTask),
+    });
+
+    if (response.ok) {
+      updateModal.style.display = "none"; 
+      currentTask = null;
+      await loadTasks(); 
+    } else {
+      const errorData = await response.json();
+      console.error("Error response data:", errorData);
+      throw new Error('Failed to update task');
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error updating task: " + error.message);
+  }
 }
 
-// Event Listeners
 addTaskBtn.addEventListener("click", addTask);
 window.addEventListener("load", loadTasks);
-
 
 saveUpdateBtn.addEventListener("click", saveUpdate);
 cancelUpdateBtn.addEventListener("click", () => {
@@ -111,4 +171,3 @@ window.onclick = (event) => {
     currentTask = null;
   }
 };
- 

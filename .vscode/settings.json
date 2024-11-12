@@ -9,6 +9,15 @@
             "database": "newtodo",
             "username": "postgres",
             "password": ""
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "sqltodo_db",
+            "database": "sqltodo_db",
+            "username": "siyabonga"
         }
     ]
 }

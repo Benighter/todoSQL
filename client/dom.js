@@ -6,7 +6,6 @@ export const updateInput = document.getElementById("updateInput");
 export const saveUpdateBtn = document.getElementById("saveUpdateBtn");
 export const cancelUpdateBtn = document.getElementById("cancelUpdateBtn");
 
-
 export function renderTask(task, onUpdate, onDelete, onDone) {
   const li = document.createElement("li");
   li.setAttribute("data-id", task.id);
@@ -30,7 +29,7 @@ export function renderTask(task, onUpdate, onDelete, onDone) {
   };
 
   const updateButton = document.createElement("button");
-  updateButton.textContent = "update";
+  updateButton.textContent = "Update";
   if (task.done) {
     updateButton.disabled = true;
     updateButton.hidden = true;
@@ -42,7 +41,7 @@ export function renderTask(task, onUpdate, onDelete, onDone) {
   doneButton.textContent = "Done";
   if (task.done) {
     doneButton.disabled = true;
-    doneButton.hidden = true; 
+    doneButton.hidden = true;
   }
 
   doneButton.onclick = () => {

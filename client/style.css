@@ -3,70 +3,71 @@ body {
   background: url(/images/Todo-image.jpg);
   background-repeat: no-repeat;
   background-size: cover;
+  height: 100vh; 
+  margin: 0; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
 }
-
 h1 {
   color: white;
   font-size: 30px;
 }
 
 .todo {
-  text-align: center;
-  background-color:#99d1ff;
-  opacity: .8;
-  height: 200px;
-  position: relative;
+  background-color: #99d1ff;
+  opacity: 0.8;
   width: 450px;
   height: 550px;
   padding: 30px 50px;
   justify-content: center;
-  margin-left: 450px;
   border-radius: 10px;
-  margin-top: 20px;
   overflow: hidden;
+}
+#taskInput{
+  margin-top: 5px;
+  height: 25px;
+}
+.input-container {
+  display: flex; 
+  margin-bottom: 20px; 
 }
 
 .todo input {
-  width: 800px;
+  width: calc(100% - 140px); 
   padding: 10px;
-  margin-right: 20px;
+  margin-right: 10px;
   height: 20px;
   border-radius: 20px;
   background-color: white;
-}
-
-.input-container {
-  display: flex;
-  gap: 0px;
 }
 
 #addTaskBtn {
   background-color: rgb(112, 199, 124);
   color: white;
   padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
   border-radius: 20px;
+  cursor: pointer;
   height: 45px;
   width: 100px;
 }
+
+#clearTasksBtn {
+  background-color: rgb(0, 145, 255);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  height: 45px;
+  width: 100px;
+}
+
 .Btn {
   flex-direction: column;
   gap: 50px;
   border-radius: 20px;
 }
-#clearTasksBtn {
-  background-color: rgb(0, 145, 255);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  border-radius: 20px;
-  height: 45px;
-  width: 100px;
-}
 
-/* Modal styles */
 .modal {
   display: none;
   position: fixed;
@@ -74,7 +75,7 @@ h1 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -118,27 +119,6 @@ button {
   background-color: #c82333;
 }
 
-/* // delete all tasks */
-
-ul {
-  list-style-type: disc;
-  padding-left: 0;
-}
-
-li {
-  margin: 5px 0;
-  padding-left: px;
-  display: flex;
-  align-items: center;
-}
-
-button {
-  margin-left: 10px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: red;
-}
 ul {
   list-style-type: none;
   padding: 0;
@@ -176,10 +156,6 @@ button:hover {
 
 .delete-button:hover {
   background-color: red;
-}
-
-.delete-button:hover {
-  background-color: #e60000;
 }
 
 .update-button {
