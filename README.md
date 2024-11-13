@@ -35,8 +35,5 @@ git clone https://github.com/Benighter/todoSQL.git
 cd todoSQL
 npm install
 npm i pg express cors dotenv
-
-don't forget to create your own (.env file), where by you will store your database (Postgrest) configure  like your_username, host_name, database_name, postgress_password,  port 
-
 cd server
 nodemon server.js
