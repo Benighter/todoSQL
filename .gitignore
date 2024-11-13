@@ -3,3 +3,5 @@
 
 # Ignore Environment variables (inside .DS_STORE)
 .env
+
+./node_modules
