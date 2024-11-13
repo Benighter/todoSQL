@@ -18,6 +18,15 @@
             "name": "sqltodo_db",
             "database": "sqltodo_db",
             "username": "siyabonga"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "todotasks",
+            "database": "todotasks",
+            "username": "Siyabonga"
         }
     ]
 }

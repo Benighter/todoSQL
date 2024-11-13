@@ -1,10 +1,11 @@
 -- CREATE TABLE tasks(
---     task_id SERIAL PRIMARY KEY ,
+--     id SERIAL PRIMARY KEY ,
 --     description VARCHAR(30) NOT NULL ,
---     date DATE
+--     date DATE,
+--     done boolean
 -- );
 
-SELECT * FROM tasks;
+-- SELECT * FROM tasks;
 
 -- -- INSERT INTO tasks (description, date) VALUES ('Task 1', '2022-01-01');
 -- INSERT INTO tasks (id, description, date, done)
