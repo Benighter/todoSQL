@@ -1,11 +1,16 @@
 import pkg from 'pg';
 const { Pool } = pkg;
+
+import dotenv from 'dotenv';
+dotenv.config({ path: '../.env' })
+
 const pool = new Pool({
-    user: "siyabonga",
-    host: "localhost",
-    database: "sqltodo_db",
-    password: "Siya@100",
-    port: 5432,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
+
 });
 
 async function connectDb() {
