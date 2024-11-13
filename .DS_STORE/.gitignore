@@ -1,6 +1,6 @@
 # Ignore the package.json file in the parent directory
-../package.json
+./package.json
 # Ignore Node.js dependencies
-../package-lock.json
+./package-lock.json
 # Ignore Environment variables
 .env
