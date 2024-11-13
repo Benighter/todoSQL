@@ -6,3 +6,6 @@ package-lock.json
 
 # Ignore Environment variables
 .env
+
+# Ignore vscode file
+.vscode
