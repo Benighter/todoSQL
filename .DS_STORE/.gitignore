@@ -1,5 +1,8 @@
-# Node.js dependencies
-node_modules/
+# Ignore the package.json file in the parent directory
+../package.json
 
-# Environment variables
+# Ignore Node.js dependencies
+../node_modules/
+
+# Ignore Environment variables
 .env
