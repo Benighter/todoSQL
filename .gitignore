@@ -1,8 +1,8 @@
 # Ignore the package.json file in the parent directory (outside .DS_STORE)
-/package.json
+./package.json
 
 # Ignore Node.js dependencies (outside .DS_STORE)
-/package-lock.json
+./package-lock.json
 
 # Ignore Environment variables (inside .DS_STORE)
 .env
