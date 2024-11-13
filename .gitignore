@@ -1,7 +1,11 @@
-# Ignore Node.js dependencies (outside .DS_STORE)
-./package-lock.json
+# Ignore Node.js dependencies (node_modules)
+node_modules/
 
-# Ignore Environment variables (inside .DS_STORE)
+# Ignore package-lock.json file
+package-lock.json
+
+# Ignore Environment variables
 .env
 
-./node_modules
+# Ignore macOS system files (e.g., .DS_Store)
+.DS_Store
