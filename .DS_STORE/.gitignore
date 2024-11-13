@@ -1,8 +1,1 @@
-# Ignore the package.json file in the parent directory
-./package.json
-
-# Ignore Node.js dependencies
-../node_modules/
-
-# Ignore Environment variables
-.env
+../.gitignores
