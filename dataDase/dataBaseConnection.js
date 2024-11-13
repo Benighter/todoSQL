@@ -2,7 +2,7 @@ import pkg from 'pg';
 const { Pool } = pkg;
 
 import dotenv from 'dotenv';
-dotenv.config({ path: '../.env' })
+dotenv.config({ path: '../.DS_STORE/.env' })
 
 const pool = new Pool({
     user: process.env.DB_USER,
