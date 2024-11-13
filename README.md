@@ -22,6 +22,7 @@ The project is divided into several folders, each serving a specific purpose to 
 
 - **Add tasks**: Quickly add new tasks to your list.
 - **Update tasks**: Edit the content of existing tasks.
+- **Done tasks**: Mark a task as done, if it is completed.
 - **Delete tasks**: Remove tasks you no longer need.
 
 This structure ensures clear separation of concerns, making the application easy to maintain and expand in the future.
