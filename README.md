@@ -34,6 +34,7 @@ Clone the repository and install the dependencies:
 ```bash
 git clone https://github.com/Benighter/todoSQL.git
 cd todoSQL
+....config your .env file for postgres connection.....
 npm install
 npm i pg express cors dotenv
 cd server
